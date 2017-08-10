@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 
@@ -46,41 +48,40 @@ public class AppEngienePracticeServlet extends HttpServlet {
 		List<Entity> emp4 = Arrays.asList(emp1, emp2, emp3);
 
 		ds.put(emp4);// used to create an entity in the datastore..
-		
-		Query q=new Query("User");
-		PreparedQuery pq=ds.prepare(q);
-		for(Entity e:pq.asIterable()){
-			String id=e.getProperty("Id").toString();
-			String fname=e.getProperty("firstName").toString();
-			String lname=e.getProperty("lastName").toString();
-			String add=e.getProperty("add").toString();
-			System.out.println(id+ " "+fname+" "+" "+lname+" "+add);
 
+		Query q = new Query("User");
+		PreparedQuery pq = ds.prepare(q);
+		for (Entity e : pq.asIterable()) {
+			String id = e.getProperty("Id").toString();
+			String fname = e.getProperty("firstName").toString();
+			String lname = e.getProperty("lastName").toString();
+			String add = e.getProperty("add").toString();
+			System.out.println(id + " " + fname + " " + " " + lname + " " + add);
 
 		}
-		
-		
-		
-		/*
-		 * =========== 
-		 * // Creating key com.google.appengine.api.datastore.Key
-		 * key = KeyFactory.createKey("User", 31);
-		 * 
-		 * // Retriving an entity try { Entity ret=ds.get(key);
-		 * System.out.println(ret); } catch (EntityNotFoundException e) { //
-		 * TODO Auto-generated catch block e.printStackTrace(); }
-		 * 
-		 * // Deleting an entity... ds.delete(key); // Creating an Entity group,
-		 * here we are passing "en" key to the employee Entity so these two
-		 * entities are in same group. Entity employee = new Entity("Employee",
-		 * en.getKey()); ds.put(employee);// used to create an entity in the
-		 * datastore..
-		 * 
-		 * // Creating ansister key com.google.appengine.api.datastore.Key key1
-		 * = new KeyFactory.Builder("User", "GreatGrandPa") .addChild("User",
-		 * "GrandPa").addChild("User", "Dad").getKey();
-		 *  =========
-		 */
+
+		// Creating key
+		com.google.appengine.api.datastore.Key key = KeyFactory.createKey("User", 31);
+
+		// Retriving an entity
+		try {
+			Entity ret = ds.get(key);
+			System.out.println(ret);
+		} catch (EntityNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		// Deleting an entity...
+		ds.delete(key);
+		// Creating an Entity group, here we are passing "en" key to the
+		// employee Entity so these two entities are in same group.
+		Entity employee = new Entity("Employee", en.getKey());
+		ds.put(employee);// used to create an entity in the datastore..
+
+		// Creating ansister key
+		com.google.appengine.api.datastore.Key key1 = new KeyFactory.Builder("User", "GreatGrandPa")
+				.addChild("User", "GrandPa").addChild("User", "Dad").getKey();
+
 		resp.setContentType("text/plain");
 		resp.getWriter().println("Hello Venkat");
 	}
